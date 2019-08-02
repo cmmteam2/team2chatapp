@@ -1,0 +1,33 @@
+<div class="row" style="position:absolute;top:0;bottom:0;left:0;right:0;">
+    <div class="col-md-4" style="background-color:white;height:100%;">
+        
+        <% flash.each do |name, msg| %>
+            <%= content_tag :div, t("#{msg}"), class: "alert alert-success",style:"margin:2% 2% 2% 2%;" %>
+        <% end %>
+
+        <div style="width:80%;display:block;margin:0 auto;position:relative;top:50%;transform:translate(0,-50%)">
+            <label style="font-size:26px" ><%= t 'wsinvitemember' %></label><br><br>
+            <lable style="font-size:18px"><%= t 'email' %></label>
+            <%= form_tag("/invite_wsmember", method: "post") do %>
+            <input class="form-control" type="text" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" style="" required>
+            
+            <br>
+            <br>
+            <div>
+            <input type="submit" name="submit" value="<%= t 'invite' %>" class="form-control btn btn-success">
+            <hr>
+            <a href="<%= session[:fullpath]%>">
+                <input type="button"  value="<%= t 'cancel' %>" class="form-control btn btn-info">
+            </a>
+            </div>
+            <% end %>
+                  
+        </div>
+    </div>
+    <div class="col-md-8" style="background-color:springgreen;height:100%;">
+    <%= link_to image_tag("a512.png", alt: "background photo",style:"width:50%;display:block;margin:0 auto;padding-top:19%;"),
+              '' %>
+    </div> 
+    
+
+</div>

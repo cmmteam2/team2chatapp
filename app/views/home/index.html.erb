@@ -1,0 +1,456 @@
+<head>
+    <style>
+    input[type=text],input[type=password]{
+        border:2px solid #CCC;
+        border-bottom:2px solid springgreen;height:40px;border-radius:15px;font-family:time new roman;
+    }
+    input[type=submit]{
+        border-radius:15px;font-family:time new roman;font-size:18px;
+        color:black;
+        font-weight:bold;
+        background-color:springgreen;
+        border:2px solid black;
+        height:40px;
+    }
+    input[type=submit]:hover{
+        color:white;
+        background-color:springgreen;
+    }
+    body,html{
+        width:100%;
+        height:100%;
+        background-color:#f2f2f2;
+    }
+    td{
+      font-size:18px;
+
+    }
+    #favouritemsgbox{
+      
+      height:1px;
+      overflow:hidden;
+    }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+</head>
+<body>
+<% if session[:user_id] %>
+  <%= render template:"home/sidenav" %>
+  
+
+  <div style="background-color:grey;position:absolute;right:0;left:0;top:0;bottom:0;padding-left:351px;">
+    <div style="width:100%;height:100%;background-color:#f2f2f2;color:red;font-size:20px;padding:2% 3%;">
+    <% if session[:user]["role"] == 1 or @isadmin.nil? %>
+            <div class="row">
+            <p id="demo"></p>
+            <div class="col-md-4">
+                <div style="box-shadow:4px 4px 16px black;width:100%;display:block;margin:0 auto;background-color:white;padding:5% 0 0 0;">
+                      <div class="row" style="margin-bottom:10px;">
+                            <div class="col-sm-4" style="font-size:64px;text-align:center;">
+                                <i class="fa fa-user text-success" style="font-size:64px;"></i>
+                            </div>
+                            <div class="col-sm-8" style="text-align:center;padding:0 0 0 1%;">
+                                <span style="font-size:36px;color:black;font-weight:bold;"><%= @totalusers.size %></span><br>
+                                <span style="font-size:18px;color:black;"><%=t('totalusers')%></span>
+                            </div>
+                      </div>
+                      <div style="">
+                          <a href="/users_index"><input type="button" value="<%= t 'view' %>" class="btn btn-success form-control" style="display:block;margin:0 auto;" ></a>
+                      </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="box-shadow:4px 4px 16px black;width:100%;display:block;margin:0 auto;background-color:white;padding:5% 0 0 0;">
+                      <div class="row" style="margin-bottom:10px;">
+                            <div class="col-sm-4" style="font-size:64px;text-align:center;">
+                                <i class="fa fa-user text-danger" style="font-size:64px;"></i>
+                            </div>
+                            <div class="col-sm-8" style="text-align:center;padding:0 0 0 1%;">
+                                <span style="font-size:36px;color:black;font-weight:bold;"><%= @workspaces.size %></span><br>
+                                <span style="font-size:18px;color:black;"><%=t('twks')%></span>
+                            </div>
+                      </div>
+                      <div style="">
+                          <a href="/workspace"><input type="button" value="<%= t 'view' %>" class="btn btn-danger form-control" style="display:block;margin:0 auto;" ></a>
+                      </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="box-shadow:4px 4px 16px black;width:100%;display:block;margin:0 auto;background-color:white;padding:5% 0 0 0;">
+                      <div class="row" style="margin-bottom:10px;">
+                            <div class="col-sm-4" style="font-size:64px;text-align:center;">
+                                <i class="fa fa-user text-primary" style="font-size:64px;"></i>
+                            </div>
+                            <div class="col-sm-8" style="text-align:center;padding:0 0 0 1%;">
+                                <span style="font-size:36px;color:black;font-weight:bold;"><%= @groups.size %></span><br>
+                                <span style="font-size:18px;color:black;"><%=t('totalgp')%></span>
+                            </div>
+                      </div>
+                      <div style="">
+                          <a href="/channels"><input type="button" value="<%= t 'view' %>" class="btn btn-primary form-control" style="display:block;margin:0 auto;" ></a>
+                      </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <div style="width:100%;background-color:white;color:black;box-shadow:4px 4px 16px black;">
+          <div style="font-size:18px;padding:1% 0 1% 1%;background-color:#f0ad4e;" >
+          <span class="text-success" style="font-weight:bold;"><i class="fa fa-users text-success"></i>&nbsp<%=t('usermanagement')%></span>
+          </div>
+          <table class="table" style="padding:1%" >
+          <tr>
+          <th><%=t('name')%></th>
+          <th><%=t('email')%></th>
+          <th><%=t('role')%></th>
+          <th><%=t('status')%></th>
+          </tr>
+          <% @users.each do |user| %>
+            <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td>
+                <% if user.role.nil? or user.role == 0 %>
+                <input type="button" class="btn btn-success" value="<%=t ('setadmin')%>" data-toggle="modal" data-target="#settingadmin" onclick="settingadmin(this)" userid="<%= user.id %>">
+                <% else %>
+                <i class="fa fa-user" style="font-size:18px;"></i>&nbsp<span style="font-size:18px;font-weight:bold"><%=t ('admin')%></span>
+                <% end %>
+                </td>
+                <td>
+                <a href="/deleteuser/<%= user.id %>">
+<span style="color:red;"><i class="fa fa-trash" onclick="deleteuser(this)" style="font-size:24px;cursor:pointer;" data-toggle="modal" data-target="#userdeletee" userid="<%= user.id %>"></i></span></a>
+                </td>
+            </tr>
+            
+          <% end %>
+          <%= paginate @users%>
+          </table>
+          
+
+
+          <!-- Modal -->
+            <div class="modal fade" id="userdelete" role="dialog">
+              <div class="modal-dialog">
+              
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header" style="background-color:red;color:white;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"> <%=t ('userdelete')%></h4>
+                  </div>
+                  <div class="modal-body">
+                  <%=t ('areyousurewanttodeleteuser')%>
+                  </div>
+                  
+                  <div class="modal-footer">
+                 
+                    <input class="form-control" type="hidden"  name="user_id" id="user_id">
+                    <input type="submit" name="submit" class="btn btn-danger" style="background-color:red;" value="<%= t 'kick' %>" >
+                    
+                  
+                  </div>
+                </div>
+                
+              </div>
+          </div>
+
+
+          <!-- Modal -->
+            <div class="modal fade" id="settingadmin" role="dialog">
+              <div class="modal-dialog">
+              
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header" style="background-color:green;color:white;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><%=t ('setadmin')%></h4>
+                  </div>
+                  <div class="modal-body">
+                  <%=t ('areyousureadmintothisuser')%>
+                  </div>
+                  <div class="modal-footer">
+                  <%= form_tag("/settingadmin", method: "post") do %>
+                    <input class="form-control" type="hidden"  name="adminid" id="adminid">
+                    <input type="submit" name="submit" class="btn btn-success" style="background-color:green;" value="<%=t ('set')%>" >
+                    
+                  <% end %>
+                  </div>
+                </div>
+                
+              </div>
+          </div>
+
+        </div>
+
+    <% else %>
+                <div class="row">
+                <a href="<%= session[:fullpath]%>/invite_wsmember" style="text-decoration:none;">
+                <div class="col-md-4">
+                    <div style="box-shadow:4px 4px 16px black;width:100%;display:block;margin:0 auto;background-color:white;padding:5% 0 0 0;">
+                          <div class="row" style="margin-bottom:10px;">
+                                <div class="col-sm-4" style="font-size:64px;text-align:center;">
+                                    <i class="fa fa-user text-success" style="font-size:64px;"></i>
+                                </div>
+                                <div class="col-sm-8" style="text-align:center;padding:0 0 0 1%;">
+                                    <span style="font-size:36px;color:black;font-weight:bold;"><%= @totalusers.size %></span><br>
+                                    <span style="font-size:18px;color:black;"><%=t('totalusers')%></span>
+                                </div>
+                          </div>
+                          <div style="">
+                              <input type="button" value="<%=t('inviteusers')%>" class="btn btn-success form-control" style="display:block;margin:0 auto;" >
+                          </div>
+                    </div>
+                </div>
+                </a>
+                <a href="<%= session[:fullpath]%>/createworkspace" style="text-decoration:none;">
+                <div class="col-md-4">
+                    <div style="box-shadow:4px 4px 16px black;width:100%;display:block;margin:0 auto;background-color:white;padding:5% 0 0 0;">
+                          <div class="row" style="margin-bottom:10px;">
+                                <div class="col-sm-4" style="font-size:64px;text-align:center;">
+                                    <i class="fa fa-user text-danger" style="font-size:64px;"></i>
+                                </div>
+                                <div class="col-sm-8" style="text-align:center;padding:0 0 0 1%;">
+                                    <span style="font-size:36px;color:black;font-weight:bold;"><%= @workspaces.size %></span><br>
+                                    <span style="font-size:18px;color:black;"><%=t('twks')%></span>
+                                </div>
+                          </div>
+                          <div style="">
+                              <input type="button" value="<%=t('createworkspace')%>" class="btn btn-danger form-control" style="display:block;margin:0 auto;" >
+                          </div>
+                    </div>
+                </div>
+                </a>
+                <a href="<%= session[:fullpath]%>/createchannel" style="text-decoration:none;">
+                <div class="col-md-4">
+                    <div style="box-shadow:4px 4px 16px black;width:100%;display:block;margin:0 auto;background-color:white;padding:5% 0 0 0;">
+                          <div class="row" style="margin-bottom:10px;">
+                                <div class="col-sm-4" style="font-size:64px;text-align:center;">
+                                    <i class="fa fa-user text-primary" style="font-size:64px;"></i>
+                                </div>
+                                <div class="col-sm-8" style="text-align:center;padding:0 0 0 1%;">
+                                    <span style="font-size:36px;color:black;font-weight:bold;"><%= @groups.size %></span><br>
+                                    <span style="font-size:18px;color:black;"><%=t('totalgp')%></span>
+                                </div>
+                          </div>
+                          <div style="">
+                            <input type="button" value="<%=t('creategroup')%>" class="btn btn-primary form-control" style="display:block;margin:0 auto;" >
+                          </div>
+                    </div>
+                </div>
+                </a>
+            </div>
+            
+
+            <hr>
+            <div style="background-color:white;color:black;">
+            <div style="padding:0 5%;">
+              
+              <!--
+              <span class="picture">
+              <%= form_tag("/users/#{session[:user]["id"]}", method: "post",id:"myform") do %>
+                <input type="file" name="file"  onchange="upload()">
+                <input type="hidden" name="userid" value="<%= session[:user]['id'] %>">
+                <p id="demo" style="color:white">ddd</p>
+              <%  end  %>
+              </span>
+              -->
+              <div style="padding:0 0 0 0;text-align:center;color:white;">
+                  <h3><%= session[:user]["name"] %> </h3>    
+                  Bios ...
+              </div>
+            </div>
+            <div style="padding:2% 5%;">
+              <h3><%=t('workspaces')%></h3>
+              <div class="row">
+              <ul>
+              <% @myworkspaces.each do |w| %>
+                  <div class="col-md-6">
+                    <li><%= w.workspace.name %></li>
+                  </div>
+                  
+                  <div class="col-md-6">
+                  <% if w.workspace.owner == session[:user]["id"] %>
+                    <span style="color:green;"><i class="fa fa-edit" style="font-size:24px;cursor:pointer;"></i></span>&nbsp
+                    <span style="color:red;"><i class="fa fa-trash" style="font-size:24px;cursor:pointer;"></i></span>
+                  <% end %>
+                  </div>
+              <% end %>
+              </ul>
+              </div>
+            </div>
+            <hr>
+            <div style="padding:0 5%">
+              <h3><%=t('email')%></h3>
+              <p style="padding:2% 0;"><%= session[:user]["email"] %>
+              </p>
+              <!--
+              <div class="row">
+                  <div class="col-sm-6">
+                  <input type="button" style="background-color:springgreen;color:black;border-radius:10px;box-shadow:3px 3px 8px grey;" class="btn form-control" value="INVITE GROUP">  
+                  </div>
+                  <div class="col-sm-6">
+                      <input type="button" style="background-color:springgreen;color:black;border-radius:10px;box-shadow:3px 3px 8px grey;" class="btn form-control" value="MESSAGE">  
+                  </div>
+              </div>
+              -->
+            </div>
+            <hr>
+            <div style="padding:0 5%">
+              <h3><%=t('joinedby')%></h3>
+              <p style="padding:2% 0;"><%= session[:user]["created_at"] %>
+              </p>
+            </div>
+            </div>
+
+    <% end %>
+
+    <hr>
+       <div style="width:100%;background-color:white;color:black;box-shadow:4px 4px 16px black;margin-bottom:2%;">
+          <div style="font-size:18px;padding:1% 0 1% 1%;" class="bg-info" onclick="showfavouritemsg()">
+          <span onclick="showfavouritemsg()" class="text-success" style="font-weight:bold;cursor:pointer;" ><i class="fa fa-star text-success" ></i>&nbsp<%=t('myfavouritemsgs')%></span><span style="float:right;cursor:pointer;margin-right:20px;font-weight:bold;" id="show_hide" class="text-success" onclick="showfavouritemsg()"><%=t('show')%></span>
+          </div>
+          <ul style="list-style-type:none;" id="favouritemsgbox">
+          <div  style="padding:2%;" >
+          
+                <% @favouritemsgs.each do |msg| %>
+                  <li>
+                  <img src="images/user1.jpg" style="width:40px;height:40px;"><%= msg.user.name%> <%=msg.created_at  %><br>
+                  <div style="background-color:#dfdfdf;border-radius:15px;color:black;padding:7px;margin-left:40px;font-size:18px;display:inline-block;">
+                  <%= msg.message %></div>
+                  </li>
+                <% end %>
+          </div>
+          </ul>
+        </div>
+        
+
+
+    </div>
+  </div>
+
+<!---
+  ============================================================================================================================
+  End of Dashboard
+--->
+
+<% else %>
+<button style="position:fixed;z-index:999;right:2%;top:2%;" style="margin-top:2px;" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal"><%= t 'login' %></button>
+<% if session[:usr_id] %>
+
+            <div class="dropdown" style="position:fixed;z-index:999;right:150px;top:2%;" style="margin-top:2px;">
+            <button class="btn btn-danger btn-lg" class="dropdown-toggle fa fa-cog" type="button" data-toggle="dropdown" > <%= t 'workspaces' %> </button>
+            
+            <ul class="dropdown-menu" style="background-color:salmon">
+              <% @myworkspaces.each do |w| %>
+                <li style="font-size:18px;"><a href="/loginworkspace_<%= w.id %>" style="color:black;text-align:center;"><%=w.workspace.name%></a></li>
+              <% end %>
+            </ul>
+            </div>
+<% end %>
+<% if session[:usr_id] %>
+  <div style="position:fixed;z-index:999;right:300px;top:2%;">
+    <span style="font-size:18px;">Language :</span>
+    <% if I18n.locale == I18n.default_locale %>
+    <button class="btn btn-warning btn-lg" style="margin-right:10px;"  ><li style="float:right;color:white;list-style-type:none;"><%=link_to "Japan",{:locale=>'ja'},style:"font-size:18px;color:white;", class:"language"%></li>
+    <%else%>
+    <button class="btn btn-warning btn-lg" style="margin-right:20px;"><li style="float:right;color:white;list-style-type:none;"><%=link_to "English",{:locale=>'en'},style:"font-size:18px;color:white;", class:"language"%></li>
+    <%end%></button>
+  </div>
+<% else %>
+  <div style="position:fixed;z-index:999;right:150px;top:2%;">
+    <span style="font-size:18px;">Language :</span>
+    <% if I18n.locale == I18n.default_locale %>
+    <button class="btn btn-warning btn-lg" style="margin-right:10px;" ><li style="float:right;color:white;list-style-type:none;"><%=link_to "Japan",{:locale=>'ja'},style:"font-size:18px;color:white;", class:"language"%></li>
+    <%else%>
+    <button class="btn btn-warning btn-lg" style="margin-right:20px;"><li style="float:right;color:white;list-style-type:none;margin-right:2%;"><%=link_to "English",{:locale=>'en'},style:"font-size:18px;color:white;", class:"language"%></li>
+    <%end%></button>
+  </div>
+<% end %>
+<div class="row" style="width:100%;height:100%;">
+
+<div class="col-md-6" style="height:100%;background-color:springgreen;position:absolute;top:0;bottom:0;left:0;padding-top:5%;">
+    
+    
+
+        <div style="">
+          <%= link_to image_tag("a512.png", alt: "background image",style:"width:80%;display:block;margin:0 auto;padding-top:10%;"),
+          '' %>
+          <!--
+          <div style="width:80%;display:block;margin:0 auto;padding:40px;font-family:American Typewriter,serif;font-size:25px;letter-spacing:1px;color:blue;">
+        <%= t 'hello' %> 
+          </div>
+          -->
+        </div>
+    </div>
+    <div class="col-md-6" id="bgdiv" style="height:100%;font-size:18px;padding:10% 0 5% 0;font-family:Stencil Std, fantasy;position:absolute;top:0;bottom:0;right:0;background-color:white;" >
+    <% flash.each do |name, msg| %>
+      <%= content_tag :div, t("#{msg}"), class: "alert alert-danger",style:"margin:-10% 2% 2% 2%;" %>
+    <% end %>
+
+    <div style="width:80%;display:block;margin:0 auto;padding-top:5%;padding:3% 3%;box-shadow:4px 4px 13px black;">
+        <%= form_tag("/signup", method: "post") do %>
+        <div class="form-group">
+        <%=label_tag t 'name' %>
+            <input id="a" type="text" name="name" class="form-control" required>
+        </div>  
+                
+        <div class="form-group">
+        <%=label_tag t 'email' %>
+          <input type="text"  name="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+        </div>
+        <div class="form-group">
+        <%=label_tag t 'pw' %>
+          <input type="password" name="password" class="form-control" pattern="[0-9]*.{8,}" title="at least 8 or more characters" required>
+        </div>
+        <div class="form-group">
+        <%=label_tag t 'confirmpw' %>
+          <input type="password" name="confirm_password" class="form-control" pattern="[0-9]*.{8,}" title="at least 8 or more characters" required>
+        </div>
+        <div style="text-align:center;" class="form-group">
+        <input type="submit" name="submit" value="<%= t 'signup' %>" class="form-control btn btn-success" required>
+         
+          <%  end  %>
+        </div>
+    </div>
+</div>
+
+<% end %>
+<script>
+    $(document).ready(function(){
+      $("input").focus(function(){
+        $(this).css({"border":"2px solid black","border-bottom":"2px solid limegreen"});
+      });
+      $("input").focusout(function(){
+        $(this).css({"border":"2px solid #CCC","border-bottom":"2px solid springgreen"});
+      });
+    });
+    function deleteuser(a){
+              var id = a.getAttribute("userid");
+              document.getElementById("user_id").value = id;
+              
+          
+
+    }
+
+    function settingadmin(a){
+      var id = a.getAttribute("userid");
+      document.getElementById("adminid").value = id;
+    }
+    function upload(){
+    document.getElementById("myform").submit();
+    //document.getElementById("demo").innerHTML = "You selected: ";
+    //document.getElementById("myform").style.display = "none";
+    }
+    function showfavouritemsg(){
+        if(document.getElementById("favouritemsgbox").style.height == "1px"){
+          document.getElementById("favouritemsgbox").style.height = "100%";
+          document.getElementById("show_hide").innerHTML = "<%= t 'hide' %>";
+        }
+      else{
+        document.getElementById("favouritemsgbox").style.height = "1px";
+        document.getElementById("show_hide").innerHTML = "<%= t 'show' %>";
+      }
+    }
+</script>
+</body>
