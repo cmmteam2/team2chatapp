@@ -23,7 +23,7 @@ Things you may want to cover:
 
 * ...
  Git
-=======
+========
 
 =>git config --global user.name "Your Name"
 =>git config --global user.email your.email@example.com
@@ -32,21 +32,6 @@ Things you may want to cover:
 =>git status
 =>git commit -m "Initialize repository"
 =>git push -u origin master
-
-Heroku
-=======
-
-1. Database.yml
-2. production.rb
-3. Add pg to Gemfile
-4. Bundle install
-5. Add to Git ( git init,git add -A, git commit -m "Chatapp",git push origin master )
-6. Create heroku application
-7. Heroku login -i or heroku login
-8. heroku git:remote -a your_app_name
-9. Add to Git ( git init,git add -A, git commit -m "Chatapp",git push origin master )
-10. git push heroku master
-11. heroku run rails db:migrate
 
 
 

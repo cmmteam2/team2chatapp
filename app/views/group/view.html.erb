@@ -1,5 +1,6 @@
 <head>
     <style>
+
     input[type=submit]{
         border-radius:15px;font-family:time new roman;font-size:18px;
         color:black;
@@ -111,10 +112,12 @@
     </div>
     
     <div id="messagebox" style="width:100%;height:90%;background-color:white;overflow:scroll;padding:10px;">
+    <!--
     <p id="demo"></p>
+-->
     <% anothermessagecount = 0 %>
     <% mymessagecount = 0 %>
-    <ul style="list-style-type:none;">
+    <ul style="list-style-type:circle;">
     <% @groupmessage.each do  |gm| %>
         <% if gm.user_id == session[:user]["id"] %>
             <% mymessagecount += 1 %>
@@ -122,8 +125,7 @@
             <div style="border-top:1px solid #EEE;border-bottom:1px solid #EEE;padding:1%;">
            
                 <div>
-                <%= link_to image_tag("tom.png", alt: "tom",style:"width:40px;height:40px;"),
-              '' %><%= gm.user.name  %> <%=gm.created_at  %>
+                <%=  image_tag(@user.file, alt: "me",style:"width:40px;height:40px;") %><%= gm.user.name  %> <%=gm.created_at  %>
               <% mygroup = 0 %>
                 <% @uhg.each do |uhg| %>
                     <% if uhg.user_id == session[:user]["id"] %>
@@ -144,9 +146,9 @@
                     <% else %>
                         <% if gm.message.index("@") %>
                             
-                            <li><a href="#" style="color:white;border-bottom:1px solid blue;text-decoration:none;"><%= gm.message %> </a></li>
+                            <li style="list-style-type: none;"><a href="#" style="color:white;border-bottom:1px solid blue;text-decoration:none;"><%= gm.message %> </a></li>
                         <% else %>
-                            <li><%= gm.message %> </li>
+                            <li style="list-style-type: none;"><%= gm.message %> </li>
                         <% end %>
                     <% end %>
                     </div>                   
@@ -175,12 +177,10 @@
                             <% if gtm.user_id == session[:user]["id"] %>
 
                                 <li>
-                                <%= link_to image_tag("user1.jpg", alt: "user1",style:"width:40px;height:40px;"),
-          '' %><%= gtm.user.name%> <%=gm.created_at  %><br><div style="margin-left:40px;background-color:#0084ff;border-radius:15px;color:white;padding:7px;font-size:18px;display:inline-block;">
+                                <%=  image_tag(gtm.user.file, alt: "user1",style:"width:40px;height:40px;") %><%= gtm.user.name%> <%=gm.created_at  %><br><div style="margin-left:40px;background-color:#0084ff;border-radius:15px;color:white;padding:7px;font-size:18px;display:inline-block;">
                                 <%= gtm.message %></div></li>
                             <% else %>
-                                <li><%= link_to image_tag("user1.jpg", alt: "user1",style:"width:40px;height:40px;"),
-                                '' %><%= gtm.user.name%> <%=gm.created_at  %><br><div style="margin-left:40px;background-color:#dfdfdf;border-radius:15px;color:black;padding:7px;font-size:18px;display:inline-block;">
+                                <li><%=  image_tag(gtm.user.file, alt: "user1",style:"width:40px;height:40px;") %><%= gtm.user.name%> <%=gm.created_at  %><br><div style="margin-left:40px;background-color:#dfdfdf;border-radius:15px;color:black;padding:7px;font-size:18px;display:inline-block;">
                                 <%= gtm.message %></div></li>
                             <% end %>
                             
@@ -203,8 +203,7 @@
             <% anothermessagecount += 1 %>
             <div style="border-top:1px solid #EEE;border-bottom:1px solid #EEE;padding:1%;">
             <div>
-            <%= link_to image_tag("user1.jpg", alt: "user1",style:"width:40px;height:40px;"),
-          '' %><%= gm.user.name%> <%=gm.created_at  %>
+            <%=  image_tag(gm.user.file, alt: "user1",style:"width:40px;height:40px;")%><%= gm.user.name%> <%=gm.created_at  %>
                 <% mygroup = 0 %>
                 <% @uhg.each do |uhg| %>
                     <% if uhg.user_id == session[:user]["id"] %>
@@ -217,9 +216,9 @@
                     <a class="messagedelete" href="delmg_<%=gm.id %>" style=""><i class="fa fa-trash" style="color:red;padding-left:23px;"></i></a>    
                 
                         <% if gm.favourite == true %>
-                            <i  onclick="gofavourite(this)" star_id="<%=gm.id %>" class="fa fa-star stars" style="float:right;color:yellow"></i>
+                            <i  star_id="<%=gm.id %>" class="fa fa-star stars" style="float:right;color:yellow" onclick="gofavourite(this)"></i>
                         <% else %>
-                            <i  onclick="gofavourite(this)" star_id="<%=gm.id %>" class="fa fa-star stars" style="float:right;"></i>
+                            <i  star_id="<%=gm.id %>" class="fa fa-star stars" style="float:right;" onclick="gofavourite(this)"></i>
                         <% end %>
                     <i  onclick="replyfunction2(this)" messagecount="<%= anothermessagecount %>" gmid2="<%=gm.id %>" class="fa fa-reply-all reply text-primary" style="float:right;"><br><span id="replydemo" style="font-size:18px;">Reply</span></i>
                 <% end %>
@@ -229,9 +228,9 @@
                     <% if gm.message.nil? %>
                     <% else %>
                         <% if gm.message.index("@") %>
-                            <li><a href="#" style="color:#0084ff;border-bottom:1px solid blue;text-decoration:none;"><%= gm.message %> </a></li>
+                            <li style="list-style-type: none;"><a href="#" style="color:#0084ff;border-bottom:1px solid blue;text-decoration:none;"><%= gm.message %> </a></li>
                         <% else %>
-                            <li><%= gm.message %> </li>
+                            <li style="list-style-type: none;"><%= gm.message %> </li>
                         <% end %>
                     <% end %>
                         
@@ -258,12 +257,10 @@
                             <% if gtm.user_id == session[:user]["id"] %>
 
                                 <li>
-                                <%= link_to image_tag("user1.jpg", alt: "user1",style:"width:40px;height:40px;"),
-          '' %><%= gtm.user.name%> <%=gm.created_at  %><br><div style="margin-left:40px;background-color:#0084ff;border-radius:15px;color:white;padding:7px;font-size:18px;display:inline-block;">
+                                <%=  image_tag(gtm.user.file, alt: "user1",style:"width:40px;height:40px;") %><%= gtm.user.name%><%= gtm.user.name%> <%=gm.created_at  %><br><div style="margin-left:40px;background-color:#0084ff;border-radius:15px;color:white;padding:7px;font-size:18px;display:inline-block;">
                                 <%= gtm.message %></div></li>
                             <% else %>
-                                <li><%= link_to image_tag("user1.jpg", alt: "user1",style:"width:40px;height:40px;"),
-                                '' %><%= gtm.user.name%> <%=gm.created_at  %><br><div style="margin-left:40px;background-color:#dfdfdf;border-radius:15px;color:black;padding:7px;font-size:18px;display:inline-block;">
+                                <li><%=  image_tag(gtm.user.file, alt: "user1",style:"width:40px;height:40px;") %><%= gtm.user.name%><%= gtm.user.name%> <%=gm.created_at  %><br><div style="margin-left:40px;background-color:#dfdfdf;border-radius:15px;color:black;padding:7px;font-size:18px;display:inline-block;">
                                 <%= gtm.message %></div></li>
                             <% end %>
                             
@@ -316,8 +313,8 @@
             function gofavourite(a){
                 var demo = a.getAttribute("star_id");
                 document.getElementById("star_hidden").value = demo;
-                document.getElementById("demo").innerHTML = document.getElementById("star_hidden").value;
-                document.getElementById("form2").submit()
+                //document.getElementById("demo").innerHTML = document.getElementById("star_hidden").value;
+                document.getElementById("form2").submit();
             }
             function onloadfunction(){
                 document.getElementById("messagebox").scrollTop = document.getElementById("messagebox").scrollHeight;

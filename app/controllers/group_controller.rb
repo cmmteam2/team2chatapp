@@ -8,7 +8,7 @@ class GroupController < ApplicationController
     end
     def create  
         logger.info "-----Create------"              
-        g = Group.new(name:params[:name],workspace_id:session[:user]["currentworkspace"],owner:session[:user]["id"],types:params[:cbx_hidden])
+        g = Group.new(name:params[:name],workspace_id:session[:user]["currentworkspace"],owner:session[:user]["id"],types:params[:cbx_hidden].downcase)
         g.save
         invites = params[:invites].split(",")
         
@@ -28,6 +28,7 @@ class GroupController < ApplicationController
             @group = Group.where(:workspace_id => session[:user]["currentworkspace"])
             @datalist_users = GroupsUser.where(:group_id=>params[:id])
             @gtm = Groupthreadmessage.all
+            @user = User.find(session[:user]["id"])
         end
 
         @mygroup = Group.find(params[:id])

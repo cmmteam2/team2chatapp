@@ -1,6 +1,6 @@
 class User < ApplicationRecord
     has_secure_password
-
+    has_one_attached :file
     has_many :groups_users, dependent: :destroy
     has_many :groups, through: :groups_users
     has_many :users_workspaces, dependent: :destroy

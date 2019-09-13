@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   post '/login',   to: 'session#create'
   get '/logout',  to: 'session#destroy'
   get "/", to:"session#index"
+  
+  get "/show",to:"user#show"
+  post "/show",to:"user#update"
+
   root "session#index"
 
   

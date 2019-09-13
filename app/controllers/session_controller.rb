@@ -57,7 +57,7 @@ class SessionController < ApplicationController
                 end
                 render template:"home/index"
         end
-        
+       @user = User.new
     end
     def login
         logger.info "-----Login------"

@@ -11,7 +11,7 @@ class UserController < ApplicationController
     end
     def create
         logger.info "-----Create------"
-        user = User.new(name:params[:name],email:params[:email].downcase,password:params[:password])
+        user = User.new(name:params[:name],email:params[:email].downcase,file:params[:file],password:params[:password])
         
         winvite = Workspaceinvite.find_by(email:user.email,confirm:"false")
         if params[:password] == params[:confirm_password]
@@ -29,7 +29,10 @@ class UserController < ApplicationController
             session[:user_id] = user.id
             session[:user_name] = user.name
             redirect_to "/"
-=end
+=end        
+           
+            
+
             session[:user] = user
             session[:user_id] = user.id
                             
@@ -83,8 +86,73 @@ class UserController < ApplicationController
     end
     end
     def show
-        logger.info "-----Show #{params[:id]}------"
-        @user = User.find(params[:id])
+        logger.info "-----Index------"
+        if session[:user]
+            if params[:abc]
+                @favouritemsgs = Groupmessage.where("favourite = ? AND favouritebyuserid = ?", true, session[:user]["id"])
+                @isadmin = User.find_by(role:"1")
+                @users = User.page(params[:abc]).per(4)
+                @totalusers = User.all
+                @groups = Group.all
+                @workspaces = Workspace.all
+                @uhgs= GroupsUser.all
+                @uhw = UsersWorkspace.where(:workspace_id => session[:user]["currentworkspace"])
+                @group = Group.where(:workspace_id => session[:user]["currentworkspace"])
+                
+                @currentworkspace = UsersWorkspace.find_by(user_id: session[:user]["id"],workspace_id: session[:user]["currentworkspace"])
+                if session[:usr_id]
+                    @myworkspaces = UsersWorkspace.where(:user_id =>session[:usr_id])
+                    
+                end
+                session[:fullpath] = request.protocol
+                session[:fullpath] += request.host_with_port
+                session[:fullpath] += request.fullpath
+                session[:lan] = request.fullpath
+
+                
+                
+            else
+                @favouritemsgs = Groupmessage.where("favourite = ? AND favouritebyuserid = ?", true, session[:user]["id"])
+                @isadmin = User.find_by(role:"1")
+                @users = User.page(params[:page]).per(4)
+                @totalusers = User.all
+                @groups = Group.all
+                @workspaces = Workspace.all
+                @uhgs= GroupsUser.all
+                @uhw = UsersWorkspace.where(:workspace_id => session[:user]["currentworkspace"])
+                @group = Group.where(:workspace_id => session[:user]["currentworkspace"])
+                
+                @currentworkspace = UsersWorkspace.find_by(user_id: session[:user]["id"],workspace_id: session[:user]["currentworkspace"])
+                if session[:usr_id]
+                    @myworkspaces = UsersWorkspace.where(:user_id =>session[:usr_id])
+                end
+                session[:fullpath] = request.protocol
+                session[:fullpath] += request.host_with_port
+                session[:fullpath] += request.fullpath
+                session[:lan] = request.fullpath
+                
+            end
+           
+        else
+                @isadmin = User.find_by(role:"1")
+                @users = User.all
+                @groups = Group.all
+                @workspaces = Workspace.all
+                @uhgs= GroupsUser.all
+                
+                if session[:usr_id]
+                    @myworkspaces = UsersWorkspace.where(:user_id =>session[:usr_id])
+                end
+                
+        end
+        @user = User.find(session[:user]["id"])
+    end
+    def update
+        user = User.find(session[:user]["id"])
+        user.file = params[:file]
+        
+        user.save
+        redirect_to "/show"
     end
     def uploadpic
 

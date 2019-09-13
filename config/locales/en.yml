@@ -31,7 +31,7 @@
 
 en:
   chatapp: "Chatapp"
-  hello: "Welcome from my chat application"
+  hello: "helps you connect and share with the people in your life."
   workspaces: "Workspaces"
   login: "LOGIN"
   signup: "Sign Up"
@@ -109,8 +109,8 @@ en:
   back: "Back"
   no: "No"
   noowks: "No"
-  groups: "Groups"
-   #error: "ERROR"
+  uploadpp: "Upload Profile"
+  #error: "ERROR"
    #error: "ERROR"
   #oops: "Oops!Internal Server Error"
    #youcangobacktoour: "You can go back to our"
